@@ -91,7 +91,7 @@ export default function Index() {
             <UtensilsCrossed size={30} color={"#ffffff"} strokeWidth={2} />
           </View>
           <Text className="text-[26px] font-bold leading-8 text-white">
-            Tonight's pick awaits
+            Tonight&apos;s pick awaits
           </Text>
           <Text className="mt-2 max-w-[85%] text-sm leading-5 text-white/90">
             Explore thousands of recipes from around the world.

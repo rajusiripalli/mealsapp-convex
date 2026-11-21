@@ -1,5 +1,5 @@
 import { COLORS, SHADOWS } from "@/constants/theme";
-// import { getClerkSSORedirectUrl } from "@/lib/auth";
+import { getClerkSSORedirectUrl } from "@/lib/auth";
 import { useAppStore } from "@/store/useAppStore";
 import { useAuth, useSSO } from "@clerk/expo";
 import { Ionicons } from "@react-native-vector-icons/ionicons";
@@ -18,6 +18,7 @@ export default function SignInScreen() {
   const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { startSSOFlow } = useSSO();
   const { clearPendingAuthAction } = useAppStore((state) => state);
 
@@ -37,28 +38,40 @@ export default function SignInScreen() {
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);
+      setErrorMessage(null);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
-      // const redirectUrl = getClerkSSORedirectUrl();
+      const redirectUrl = getClerkSSORedirectUrl();
 
       const { createdSessionId, setActive, authSessionResult } =
         await startSSOFlow({
           strategy: "oauth_google",
-          //redirectUrl,
+          redirectUrl,
         });
 
       if (authSessionResult?.type === "cancel") {
         return;
       }
 
+      if (authSessionResult?.type === "dismiss") {
+        setErrorMessage("Sign-in was closed before it finished. Please try again.");
+        return;
+      }
+
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
         clearPendingAuthAction();
-        // router.replace("/");
+        router.replace("/");
         return;
       }
+
+      setErrorMessage(
+        "Google sign-in returned without a session. Rebuild and open the app, then try again.",
+      );
     } catch (err) {
-      console.log(err);
+      setErrorMessage(
+        err instanceof Error ? err.message : "Google sign-in could not be completed.",
+      );
     } finally {
       setLoading(false);
     }
@@ -119,6 +132,11 @@ export default function SignInScreen() {
               </>
             )}
           </Pressable>
+          {errorMessage ? (
+            <Text className="mt-4 text-sm leading-5 text-red-600">
+              {errorMessage}
+            </Text>
+          ) : null}
         </View>
       </View>
     </SafeAreaView>
