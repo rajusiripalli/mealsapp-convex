@@ -26,6 +26,21 @@ export default function Index() {
     router.push("/(auth)/sign-in");
   };
 
+  const goToProfile = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push("/(tabs)/profile");
+  };
+
+  const handleNavigateToDiscoverScreen = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push("/(tabs)");
+  };
+
+  const handleNavigateToSavedScreen = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    router.push("/(tabs)/saved");
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <View className="flex-row items-center justify-between px-6 pt-2">
@@ -37,7 +52,7 @@ export default function Index() {
         {isLoaded && isSignedIn ? (
           <Pressable
             style={SHADOWS.soft}
-            // onPress={goToProfile}
+            onPress={goToProfile}
             className="flex-row items-center gap-2 rounded-full bg-white px-3 py-2 active:opacity-75"
           >
             {user?.imageUrl ? (
@@ -97,7 +112,7 @@ export default function Index() {
             Explore thousands of recipes from around the world.
           </Text>
           <Pressable
-            //onPress={handleNavigateToDiscoverScreen}
+            onPress={handleNavigateToDiscoverScreen}
             className="mt-5 flex-row items-center gap-2 self-start rounded-full bg-white px-5 py-3 active:opacity-90"
           >
             <Text className="text-sm font-bold text-[#f97316]">
@@ -112,7 +127,7 @@ export default function Index() {
         </Text>
         <View className="mt-3 flex-row gap-3">
           <Pressable
-            // onPress={handleNavigateToDiscoverScreen}
+            onPress={handleNavigateToDiscoverScreen}
             className="flex-1 rounded-3xl bg-white p-4 active:opacity-90"
             style={[SHADOWS.soft, { minHeight: 200 }]}
           >
@@ -128,7 +143,7 @@ export default function Index() {
           </Pressable>
           <View className="flex-1 gap-3">
             <Pressable
-              // onPress={handleNavigateToSavedScreen}
+              onPress={handleNavigateToSavedScreen}
               className="flex-1 rounded-3xl bg-white p-4 active:opacity-90"
               style={[SHADOWS.soft, { minHeight: 200 }]}
             >

@@ -8,13 +8,17 @@
  * @module
  */
 
+import type * as savedMeals from "../savedMeals.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  savedMeals: typeof savedMeals;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.

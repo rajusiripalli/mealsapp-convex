@@ -14,6 +14,20 @@ const convex = convexUrl
   ? new ConvexReactClient(convexUrl, { unsavedChangesWarning: false })
   : null;
 
+function ConvexClerkProvider({ children }: { children: React.ReactNode }) {
+  const { sessionId } = useAuth();
+
+  return (
+    <ConvexProviderWithClerk
+      key={sessionId || "signed-out"}
+      client={convex!}
+      useAuth={useAuth}
+    >
+      {children}
+    </ConvexProviderWithClerk>
+  );
+}
+
 export default function RootLayout() {
   if (!publishableKey) {
     throw new Error("Clerk publishable key is not defined.");
@@ -24,7 +38,7 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+        <ConvexClerkProvider>
           <StatusBar style="dark" />
           <Stack
             screenOptions={{
@@ -32,7 +46,7 @@ export default function RootLayout() {
               contentStyle: { backgroundColor: "#fff8ef" },
             }}
           />
-        </ConvexProviderWithClerk>
+        </ConvexClerkProvider>
       </ClerkProvider>
     </SafeAreaProvider>
   );
